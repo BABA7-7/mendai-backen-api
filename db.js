@@ -1,9 +1,9 @@
 import mysql from "mysql2/promise";
 
 export const db = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT || 3306
+  host: "shinkansen.proxy.rlwy.net",
+  user: "root",
+  password: "mczucwMcsUTXTNwILSjzKhppRsvldzjd",
+  database: "railway",
+  port: 35748 // Use the public port here
 });
