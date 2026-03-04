@@ -17,7 +17,7 @@ const app = express();
 // At the top, replace your current cors() with this
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://meek-syrniki-969853.netlify.app",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Authorization"], // ← important for token responses
