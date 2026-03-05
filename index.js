@@ -17,7 +17,7 @@ const app = express();
 // At the top, replace your current cors() with this
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://mendai-backen-api.onrender.com",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Authorization"], // ← important for token responses
@@ -543,7 +543,12 @@ app.get("/appointments", auth, async (req, res) => {
 /* =========================
    START SERVER
 ========================= */
+/* =========================
+   START SERVER
+========================= */
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
+
+// Adding '0.0.0.0' is crucial for Render to bind the host correctly
+app.listen(PORT, '0.0.0.0', () =>
+  console.log(`🚀 Server running on port ${PORT}`)
 );
