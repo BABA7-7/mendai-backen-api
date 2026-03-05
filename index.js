@@ -17,7 +17,7 @@ const app = express();
 // At the top, replace your current cors() with this
 app.use(
   cors({
-    origin: "https://meek-syrniki-969853.netlify.app",
+    origin: "http://localhost:3000",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Authorization"], // ← important for token responses
@@ -368,11 +368,15 @@ app.post(
       }
 
       // Save message
-      const [result] = await db.query(
-        "INSERT INTO chat_messages (session_id, role, text, images) VALUES (?, ?, ?, ?)",
-        [sessionId, role, text, JSON.stringify(images)]
-      );
-
+      // const [result] = await db.query(
+      //   "INSERT INTO chat_messages (session_id, role, text, images) VALUES (?, ?, ?, ?)",
+      //   [sessionId, role, text, JSON.stringify(images)]
+      // );
+// Save user message
+const [result] = await db.query(
+  "INSERT INTO chat_messages (session_id, user_id, role, text, images) VALUES (?, ?, ?, ?, ?)",
+  [sessionId, userId, role, text, JSON.stringify(images)] // Added userId here
+);
       let aiResponse = null;
 
       // AI reply only for user messages
@@ -401,10 +405,15 @@ app.post(
 
         aiResponse = (await generateWithRetry(model, parts)).trim();
 
-        await db.query(
-          "INSERT INTO chat_messages (session_id, role, text) VALUES (?, 'ai', ?)",
-          [sessionId, aiResponse]
-        );
+        // await db.query(
+        //   "INSERT INTO chat_messages (session_id, role, text) VALUES (?, 'ai', ?)",
+        //   [sessionId, aiResponse]
+        // );
+        // Save AI reply
+await db.query(
+  "INSERT INTO chat_messages (session_id, user_id, role, text) VALUES (?, ?, 'ai', ?)",
+  [sessionId, userId, aiResponse] // Added userId here
+);
       }
 
       res.json({
@@ -534,12 +543,7 @@ app.get("/appointments", auth, async (req, res) => {
 /* =========================
    START SERVER
 ========================= */
-/* =========================
-   START SERVER
-========================= */
 const PORT = process.env.PORT || 5000;
-
-// Adding '0.0.0.0' is crucial for Render to bind the host correctly
-app.listen(PORT, '0.0.0.0', () =>
-  console.log(`🚀 Server running on port ${PORT}`)
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
